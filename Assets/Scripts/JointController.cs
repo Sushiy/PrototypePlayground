@@ -16,7 +16,8 @@ public class JointController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        euler = rotationSource.localRotation.eulerAngles;
+        if(rotationSource)
+            euler = rotationSource.localRotation.eulerAngles;
         joint.targetRotation = Quaternion.Euler(euler);
     }
 }
