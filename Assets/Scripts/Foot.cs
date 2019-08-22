@@ -4,19 +4,39 @@ using UnityEngine;
 
 public class Foot : MonoBehaviour
 {
-    public Transform anchorPoint;
+    Leg leg;
 
-    public float legLength = 1.0f;
+    public bool isGrounded = false;
+    
     // Start is called before the first frame update
     void Start()
     {
-        if(anchorPoint != null)
-            legLength = (anchorPoint.position - transform.position).magnitude;
+        leg = GetComponentInParent<Leg>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.CompareTag("Floor"))
+        {
+            isGrounded = true;
+            //leg.SetKinematic(true);
+            //GetComponent<FastIKFabrik>().enabled = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.CompareTag("Floor") && isGrounded)
+        {
+            isGrounded = false;
+            //leg.SetKinematic(false);
+            //GetComponent<FastIKFabrik>().enabled = false;
+        }
     }
 }
