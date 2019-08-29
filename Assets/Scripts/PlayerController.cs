@@ -17,10 +17,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         moveInput.x = Input.GetAxisRaw("Horizontal");
         //moveInput.y = Input.GetAxisRaw("Vertical");
+
+        rigid.velocity += moveInput * playerSpeed * Time.deltaTime;
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
             rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
