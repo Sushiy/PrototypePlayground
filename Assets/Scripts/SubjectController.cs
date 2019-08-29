@@ -17,7 +17,7 @@ public class SubjectController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rigid = GetComponent<Rigidbody>();
+        //rigid = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -26,14 +26,15 @@ public class SubjectController : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         float h = Input.GetAxis("Horizontal");
 
-        if(useForce)
+        transform.position += transform.forward * v * speed * Time.deltaTime + transform.right * h * speed * Time.deltaTime;
+        /*if (useForce)
         {
             rigid.AddForce(transform.forward * v * acceleration * Time.deltaTime, ForceMode.Acceleration);
             rigid.AddForce(transform.right * h * acceleration * Time.deltaTime, ForceMode.Acceleration);
         }
         else
         {
-            rigid.MovePosition(rigid.position + transform.forward * v * speed * Time.deltaTime + transform.right * h * speed * Time.deltaTime);
-        }
+            //rigid.MovePosition(rigid.position + transform.forward * v * speed * Time.deltaTime + transform.right * h * speed * Time.deltaTime);
+        }*/
     }
 }

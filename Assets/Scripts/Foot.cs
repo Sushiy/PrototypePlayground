@@ -4,20 +4,30 @@ using UnityEngine;
 
 public class Foot : MonoBehaviour
 {
-    Leg leg;
+    RigidbodyLeg leg;
+    FastIKFabrik ikSolver;
 
     public bool isGrounded = false;
+    public bool isMoving = false;
+
+    const float STEPTIME = 0.2f;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        leg = GetComponentInParent<Leg>();
+        leg = GetComponentInParent<RigidbodyLeg>();
+        ikSolver = GetComponent<FastIKFabrik>();
     }
-
+    
     // Update is called once per frame
-    void Update()
+    public void TryMove()
     {
+        if (isMoving) return;
 
+        if((transform.position - leg.centerPoint).sqrMagnitude > leg.maxDistanceFromLeg * leg.maxDistanceFromLeg)
+        {
+            StartCoroutine(MoveToTarget());
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -25,8 +35,6 @@ public class Foot : MonoBehaviour
         if(collision.collider.CompareTag("Floor"))
         {
             isGrounded = true;
-            //leg.SetKinematic(true);
-            //GetComponent<FastIKFabrik>().enabled = true;
         }
     }
 
@@ -35,8 +43,21 @@ public class Foot : MonoBehaviour
         if (collision.collider.CompareTag("Floor") && isGrounded)
         {
             isGrounded = false;
-            //leg.SetKinematic(false);
-            //GetComponent<FastIKFabrik>().enabled = false;
         }
+    }
+
+    IEnumerator MoveToTarget()
+    {
+        Vector3 oldPosition = ikSolver.target.position;
+        Vector3 newPosition = leg.centerPoint + (leg.centerPoint - ikSolver.target.position).normalized * leg.maxDistanceFromLeg;
+        float t = 0;
+        isMoving = true;
+        do
+        {
+            ikSolver.target.position = Vector3.Lerp(oldPosition, newPosition, t);
+            t += Time.deltaTime / STEPTIME;
+            yield return null;
+        } while (t < 1.0f);
+        isMoving = false;
     }
 }
