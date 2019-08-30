@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0) && aimArm.gameObject.activeInHierarchy)
         {
-            if(rocketFist.flightTime <= 0 ||!rocketFist.gameObject.activeInHierarchy)
+            if(rocketFist.flightTime <= 0 || !rocketFist.gameObject.activeInHierarchy)
             {
                 aimArm.gameObject.SetActive(false);
                 rocketFist.gameObject.SetActive(false);

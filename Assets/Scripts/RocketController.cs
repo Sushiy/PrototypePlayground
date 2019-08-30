@@ -17,6 +17,7 @@ public class RocketController : MonoBehaviour
     Vector2 moveInput = Vector2.zero;
 
     public LayerMask breakMask;
+    public bool broken;
 
     SpriteRenderer spriteR;
 
@@ -32,6 +33,7 @@ public class RocketController : MonoBehaviour
     public void Fire()
     {
         flightTime = maxFlightTime;
+        broken = false;
     }
 
     private void LateUpdate()
@@ -112,6 +114,8 @@ public class RocketController : MonoBehaviour
 
     void Break()
     {
+        if (broken) return;
+        broken = true;
         flightTime = 0;
         rigid.gravityScale = 1;
         OnBreak?.Invoke();
