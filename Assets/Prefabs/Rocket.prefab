@@ -27,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5294869439219718943}
-  m_LocalRotation: {x: -0, y: -0, z: -0.99996495, w: -0.008372952}
+  m_LocalRotation: {x: 0, y: 0, z: 0.999965, w: 0.0083686365}
   m_LocalPosition: {x: 0.02, y: 1.15, z: 0}
-  m_LocalScale: {x: 2.4914668, y: 2.4914668, z: 2.4914668}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5294869440220027634}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 179.04102}
 --- !u!212 &5294869439219718942
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -98,7 +98,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RocketAcceleration: 10
   maxVelocity: 10
+  flightTime: 0
   keyboardController: 0
+  breakMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  broken: 0
 --- !u!50 &5294869439219718938
 Rigidbody2D:
   serializedVersion: 4
@@ -115,7 +120,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: d62fba0cc44af41499895b1d400d41ca, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -133,8 +138,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.4, y: 0.79}
+  m_Offset: {x: 0, y: 0.3}
+  m_Size: {x: 0.3, y: 0.6}
   m_Direction: 0
 --- !u!1 &5294869440220027635
 GameObject:

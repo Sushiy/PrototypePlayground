@@ -153,8 +153,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.52}
-  m_Size: {x: 1.04, y: 1.6}
+  m_Offset: {x: 0, y: -0.1}
+  m_Size: {x: 0.48, y: 1}
   m_Direction: 0
 --- !u!50 &78678699
 Rigidbody2D:
@@ -215,8 +215,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 6926527465618160625, guid: cde153c7cf1cf594aa94a643d8fa5bd0,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 136fc895c5b2a20459d0b5cc2f1dea15, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -235,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78678697}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.8, y: 4.21, z: 0}
+  m_LocalPosition: {x: 2.8, y: 3.165, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1702016838}
@@ -255,9 +254,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06335e4c755cf1145a1de6199ac7af69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 10
-  jumpForce: 10
-  rocketFistRecoil: 5
+  playerSpeed: 5
+  jumpForce: 5
+  rocketFistRecoil: 2
   aimArm: {fileID: 1702016838}
   rocketFist: {fileID: 82116988}
 --- !u!114 &82116988 stripped
@@ -2534,7 +2533,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0.078125, y: 0.06640625, z: 0.02734375, w: -0.03125}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -2728,36 +2727,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
+    - target: {fileID: 5294869439219718938, guid: 61a36f233d3c1be4ab5914f37ecfca62,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718940, guid: 61a36f233d3c1be4ab5914f37ecfca62,
-        type: 3}
-      propertyPath: flightTime
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718940, guid: 61a36f233d3c1be4ab5914f37ecfca62,
-        type: 3}
-      propertyPath: breakMask.m_Bits
-      value: 1024
-      objectReference: {fileID: 0}
-    - target: {fileID: 5294869439219718939, guid: 61a36f233d3c1be4ab5914f37ecfca62,
-        type: 3}
-      propertyPath: m_Offset.y
-      value: 0.75
-      objectReference: {fileID: 0}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: d62fba0cc44af41499895b1d400d41ca, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61a36f233d3c1be4ab5914f37ecfca62, type: 3}
 --- !u!1 &1702016837
@@ -2785,7 +2759,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702016837}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.83, z: 0}
+  m_LocalPosition: {x: 0, y: -0.167, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 78678701}
