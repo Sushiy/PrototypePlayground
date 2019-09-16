@@ -17,22 +17,29 @@ public class PlayerController : MonoBehaviour
 
     public RocketController rocketFist;
 
+    Vector3 velocity;
+    [Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
+
     // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         rocketFist.OnBreak += ReactivateAimArm;
+        rocketFist.OnGrab += Grab;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         moveInput.x = Input.GetAxisRaw("Horizontal");
-        //moveInput.y = Input.GetAxisRaw("Vertical");
 
-        rigid.velocity += moveInput * playerSpeed * Time.deltaTime;
+        // Move the character by finding the target velocity
+        Vector3 targetVelocity = new Vector2(moveInput.x * 10f, rigid.velocity.y);
+        // And then smoothing it out and applying it to the character
+        rigid.velocity = Vector3.SmoothDamp(rigid.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-        if(Input.GetKeyDown(KeyCode.Space))
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
@@ -71,6 +78,11 @@ public class PlayerController : MonoBehaviour
     private void ReactivateAimArm()
     {
         StartCoroutine(DelayedActivate());
+    }
+
+    private void Grab()
+    {
+        GetComponent<HingeJoint2D>().connectedBody = rocketFist.GetComponent<Rigidbody2D>();
     }
 
     IEnumerator DelayedActivate()

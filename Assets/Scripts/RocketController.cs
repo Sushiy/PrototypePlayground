@@ -18,10 +18,13 @@ public class RocketController : MonoBehaviour
 
     public LayerMask breakMask;
     public bool broken;
-
     SpriteRenderer spriteR;
 
     public System.Action OnBreak;
+
+    public bool grabbing;
+    public System.Action OnGrab;
+
 
     private float jointIntervals = 0.064f;
     private float jointDelta = 0.0f;
@@ -64,6 +67,7 @@ public class RocketController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (grabbing) return;
         if(keyboardController)
         {
             rigid.gravityScale = 0;
@@ -122,7 +126,7 @@ public class RocketController : MonoBehaviour
 
         }
 
-        if(jointDelta > jointIntervals)
+        if(chainRender != null && jointDelta > jointIntervals)
         {
             jointDelta = 0;
             wayPoints.Insert(0,transform.position);
@@ -134,7 +138,14 @@ public class RocketController : MonoBehaviour
     {
         if( breakMask == (breakMask | (1 << col.gameObject.layer)))
         {
-            Break();
+            if(col.gameObject.CompareTag("Grabbable"))
+            {
+                Grab();
+            }
+            else
+            {
+                Break();
+            }
         }
     }
 
@@ -153,5 +164,14 @@ public class RocketController : MonoBehaviour
         flightTime = 0;
         rigid.gravityScale = 1;
         OnBreak?.Invoke();
+    }
+
+    void Grab()
+    {
+        if (broken) return;
+        grabbing = true;
+        flightTime = 0;
+        rigid.bodyType = RigidbodyType2D.Static;
+        OnGrab?.Invoke();
     }
 }
