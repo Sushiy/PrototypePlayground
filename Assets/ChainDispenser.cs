@@ -18,7 +18,7 @@ public class ChainDispenser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        latestJoint = GetComponentInChildren<HingeJoint2D>();
+        latestJoint = GetComponentInChildren<HingeJoint2D>(true);
         joints = new List<HingeJoint2D>();
         joints.Add(latestJoint);
     }
@@ -26,69 +26,83 @@ public class ChainDispenser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0))
-        {
-            currentChainLength += 1f * Time.deltaTime * dispenseSpeed;
-            if(latestJoint != null)
-                latestJoint.transform.localPosition += latestJoint.transform.up * -1.3f * dispenseSpeed * Time.deltaTime;
-        }
-        if(Input.GetMouseButton(1))
-        {
-            currentChainLength -= 1f * Time.deltaTime * dispenseSpeed;
-            if (latestJoint != null)
-                latestJoint.transform.localPosition -= latestJoint.transform.up * -1.3f * dispenseSpeed * Time.deltaTime;
-        }
 
-        if (Mathf.FloorToInt(currentChainLength) > numOfLinks)
+        if (currentChainLength > 1f)
         {
             numOfLinks++;
-            HingeJoint2D h = Instantiate(chainLinkPrefab, transform).GetComponent<HingeJoint2D>();
-            if (latestJoint != null)
-            {
-                h.connectedBody = latestJoint.connectedBody;
-                h.connectedAnchor = Vector2.zero;
-                latestJoint.connectedBody = h.GetComponent<Rigidbody2D>();
-                latestJoint.connectedAnchor = connectedAnchorOffset;
-                latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-                latestJoint = h;
-                latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-                latestJoint.transform.localEulerAngles = Vector3.zero;
-                latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y,0);
-                h.enabled = true;
-            }
-            else
-            {
-                h.connectedBody = GetComponent<Rigidbody2D>();
-                h.connectedAnchor = Vector2.zero;
-                latestJoint = h;
-                latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-                latestJoint.transform.localEulerAngles = Vector3.zero;
-                latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
-                h.enabled = true;
-            }
-            joints.Add(h);
+            AddLink();
         }
-        else if (Mathf.FloorToInt(currentChainLength) < numOfLinks)
+        else if (currentChainLength < 0f)
         {
             numOfLinks--;
-            if(joints.Count > 1)
-            {
-                joints[joints.Count - 2].connectedBody = GetComponent<Rigidbody2D>();
-                joints[joints.Count - 2].connectedAnchor = Vector2.zero;
-                joints.Remove(latestJoint);
-                Destroy(latestJoint.gameObject);
-                latestJoint = joints[joints.Count - 1];
-                latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-                latestJoint.transform.localEulerAngles = Vector3.zero;
-                latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
-            }
-            else
-            {
-                joints.Remove(latestJoint);
-                Destroy(latestJoint.gameObject);
-            }
+            RemoveLink();
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            currentChainLength += 1f * Time.fixedDeltaTime * dispenseSpeed;
+        }
+        if (Input.GetMouseButton(1))
+        {
+            currentChainLength -= 1f * Time.fixedDeltaTime * dispenseSpeed;
+        }
 
+        if (latestJoint != null && latestJoint.gameObject.activeInHierarchy)
+            latestJoint.transform.localPosition = Vector3.Lerp(new Vector3(connectedAnchorOffset.x, -connectedAnchorOffset.y, 0), Vector3.zero, currentChainLength);
+    }
+
+    void AddLink()
+    {
+        HingeJoint2D h = Instantiate(chainLinkPrefab, transform).GetComponent<HingeJoint2D>();
+        if (latestJoint != null)
+        {
+            h.connectedBody = latestJoint.connectedBody;
+            h.connectedAnchor = Vector2.zero;
+            latestJoint.connectedBody = h.GetComponent<Rigidbody2D>();
+            latestJoint.connectedAnchor = connectedAnchorOffset;
+            latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            latestJoint = h;
+            latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            latestJoint.transform.localEulerAngles = Vector3.zero;
+            latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
+            h.enabled = true;
+        }
+        else
+        {
+            h.connectedBody = GetComponent<Rigidbody2D>();
+            h.connectedAnchor = Vector2.zero;
+            latestJoint = h;
+            latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            latestJoint.transform.localEulerAngles = Vector3.zero;
+            latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
+            h.enabled = true;
+        }
+        joints.Add(h);
+        currentChainLength = 0.0f;
+    }
+
+    void RemoveLink()
+    {
+        if (joints.Count == 0) return;
+        if (joints.Count > 1)
+        {
+            joints[joints.Count - 2].connectedBody = GetComponent<Rigidbody2D>();
+            joints[joints.Count - 2].connectedAnchor = Vector2.zero;
+            joints.Remove(latestJoint);
+            Destroy(latestJoint.gameObject);
+            latestJoint = joints[joints.Count - 1];
+            latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            latestJoint.transform.localEulerAngles = Vector3.zero;
+            latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
+            currentChainLength = 1.0f;
+        }
+        else
+        {
+            joints.Remove(latestJoint);
+            Destroy(latestJoint.gameObject);
         }
     }
 }
