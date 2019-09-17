@@ -10,8 +10,8 @@ public class RocketController : MonoBehaviour
 
     Vector3 mouseDirection;
 
-    public float flightTime = 0; //How many seconds can the glove fly
-    float maxFlightTime = 3;
+    public float flightTime = 0; //How many seconds can the glove fly still
+    public float maxFlightTime = 3;
 
     public bool keyboardController = false;
     Vector2 moveInput = Vector2.zero;
@@ -20,42 +20,25 @@ public class RocketController : MonoBehaviour
     public bool broken;
     SpriteRenderer spriteR;
 
+    public System.Action OnFire;
+    public System.Action OnKeepFiring;
+    public System.Action OnGrab;
     public System.Action OnBreak;
 
     public bool grabbing;
-    public System.Action OnGrab;
-
-
-    private float jointIntervals = 0.064f;
-    private float jointDelta = 0.0f;
-
-    private List<Vector3> wayPoints;
-
-    public LineRenderer chainRender;
 
     // Start is called before the first frame update
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
-        wayPoints = new List<Vector3>();
-        chainRender.positionCount = Mathf.RoundToInt(maxFlightTime / jointIntervals);
     }
 
     public void Fire()
     {
+        OnFire?.Invoke();
         flightTime = maxFlightTime;
         broken = false;
-        wayPoints.Clear();
-        ResetChainPosition();
-    }
-
-    void ResetChainPosition()
-    {
-        for(int i = 0; i < chainRender.positionCount;  i++)
-        {
-            chainRender.SetPosition(i, transform.position);
-        }
     }
 
     private void LateUpdate()
@@ -111,8 +94,7 @@ public class RocketController : MonoBehaviour
                         // Rotate Object
                         rigid.MoveRotation(AngleDeg);
                     }
-                    jointDelta += Time.fixedDeltaTime;
-
+                    OnKeepFiring?.Invoke();
                 }
                 else
                 {
@@ -124,13 +106,6 @@ public class RocketController : MonoBehaviour
                 rigid.gravityScale = 1;
             }
 
-        }
-
-        if(chainRender != null && jointDelta > jointIntervals)
-        {
-            jointDelta = 0;
-            wayPoints.Insert(0,transform.position);
-            chainRender.SetPositions(wayPoints.ToArray());
         }
     }
 
@@ -149,15 +124,7 @@ public class RocketController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        for(int i = 0; i < wayPoints.Count-1; i++)
-        {
-            Gizmos.DrawLine(wayPoints[i], wayPoints[i + 1]);
-        }
-    }
-
-    void Break()
+    public void Break()
     {
         if (broken) return;
         broken = true;

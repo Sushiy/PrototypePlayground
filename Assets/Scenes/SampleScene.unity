@@ -260,6 +260,7 @@ MonoBehaviour:
   rocketFistRecoil: 24
   aimArm: {fileID: 1702016838}
   rocketFist: {fileID: 82116988}
+  movementSmoothing: 0.05
 --- !u!233 &78678703
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -290,7 +291,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1354762797}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1571845877}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c8a45a7a6fcc3b49b7db09e30eaadf7, type: 3}
@@ -2998,7 +2999,7 @@ PrefabInstance:
     - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.83
+      value: -0.8299999
       objectReference: {fileID: 0}
     - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
         type: 3}
@@ -3045,6 +3046,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294869439219718941, guid: 61a36f233d3c1be4ab5914f37ecfca62,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5294869439219718938, guid: 61a36f233d3c1be4ab5914f37ecfca62,
         type: 3}
       propertyPath: m_Material
@@ -3067,6 +3083,45 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61a36f233d3c1be4ab5914f37ecfca62, type: 3}
+--- !u!1 &1571845877 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5294869439219718943, guid: 61a36f233d3c1be4ab5914f37ecfca62,
+    type: 3}
+  m_PrefabInstance: {fileID: 1354762797}
+  m_PrefabAsset: {fileID: 0}
+--- !u!232 &1571845881
+DistanceJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571845877}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 78678699}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_AutoConfigureDistance: 0
+  m_Distance: 10
+  m_MaxDistanceOnly: 1
+--- !u!114 &1571845882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571845877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a2575190a4a454786d7068df14fd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainRender: {fileID: 839675255}
+  maxChainLength: 15
 --- !u!1 &1702016837
 GameObject:
   m_ObjectHideFlags: 0

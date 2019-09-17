@@ -9,16 +9,24 @@ public class ChainDispenser : MonoBehaviour
 
     public float currentChainLength = 0;
     public int numOfLinks = 0;
+    float jointLength = 1.3f;
+    Vector2 connectedAnchorOffset;
 
     public HingeJoint2D latestJoint;
-    Vector2 connectedAnchorOffset = new Vector2(0, 1.3f);
+    public DistanceJoint2D oldestJoint;
+    float totalLength = 0f;
+
+    Rigidbody2D rigid;
 
     List<HingeJoint2D> joints;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        rigid = GetComponent<Rigidbody2D>();
+        connectedAnchorOffset = new Vector2(0, jointLength);
         latestJoint = GetComponentInChildren<HingeJoint2D>(true);
+        SetAsOldestJoint(latestJoint);
         joints = new List<HingeJoint2D>();
         joints.Add(latestJoint);
     }
@@ -50,6 +58,10 @@ public class ChainDispenser : MonoBehaviour
             currentChainLength -= 1f * Time.fixedDeltaTime * dispenseSpeed;
         }
 
+        totalLength = (numOfLinks) * jointLength;
+        if(oldestJoint)
+            oldestJoint.distance = totalLength;
+
         if (latestJoint != null && latestJoint.gameObject.activeInHierarchy)
             latestJoint.transform.localPosition = Vector3.Lerp(new Vector3(connectedAnchorOffset.x, -connectedAnchorOffset.y, 0), Vector3.zero, currentChainLength);
     }
@@ -72,12 +84,13 @@ public class ChainDispenser : MonoBehaviour
         }
         else
         {
-            h.connectedBody = GetComponent<Rigidbody2D>();
+            h.connectedBody = rigid;
             h.connectedAnchor = Vector2.zero;
             latestJoint = h;
             latestJoint.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
             latestJoint.transform.localEulerAngles = Vector3.zero;
             latestJoint.transform.localPosition = new Vector3(0, latestJoint.transform.localPosition.y, 0);
+            SetAsOldestJoint(latestJoint);
             h.enabled = true;
         }
         joints.Add(h);
@@ -102,7 +115,18 @@ public class ChainDispenser : MonoBehaviour
         else
         {
             joints.Remove(latestJoint);
+            oldestJoint = null;
             Destroy(latestJoint.gameObject);
         }
+    }
+
+    void SetAsOldestJoint(HingeJoint2D newOldest)
+    {
+        if (newOldest == null) return;
+        DistanceJoint2D distance = newOldest.gameObject.AddComponent<DistanceJoint2D>();
+        distance.connectedBody = rigid;
+        distance.distance = totalLength;
+        distance.maxDistanceOnly = true;
+        oldestJoint = distance;
     }
 }
