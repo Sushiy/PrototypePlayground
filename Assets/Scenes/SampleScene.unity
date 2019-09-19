@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 78678698}
   - component: {fileID: 78678702}
   - component: {fileID: 78678703}
+  - component: {fileID: 78678704}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -255,12 +256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06335e4c755cf1145a1de6199ac7af69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 10
-  jumpForce: 40
   rocketFistRecoil: 24
   aimArm: {fileID: 1702016838}
   rocketFist: {fileID: 82116988}
-  movementSmoothing: 0.05
 --- !u!233 &78678703
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -285,6 +283,23 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
+--- !u!114 &78678704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78678697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846ddacbb9418b84b8ef5a2075352df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSpeed: 10
+  playerAcceleration: 1000
+  dragFactor: 50
+  movementSmoothing: 0.05
+  jumpForce: 50
 --- !u!114 &82116988 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5294869439219718940, guid: 61a36f233d3c1be4ab5914f37ecfca62,
@@ -3120,7 +3135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a2575190a4a454786d7068df14fd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainRender: {fileID: 839675255}
   maxChainLength: 15
 --- !u!1 &1702016837
 GameObject:

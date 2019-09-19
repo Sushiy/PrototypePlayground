@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RocketController))]
-public class ChainController : MonoBehaviour
+public class ChainController : MonoBehaviour, InputListener
 {
     Rigidbody2D rigid;
     SpriteRenderer spriteR;
@@ -15,50 +15,54 @@ public class ChainController : MonoBehaviour
 
     private List<Vector3> wayPoints;
 
-    public LineRenderer chainRender;
+    private LineRenderer chainRender;
 
     DistanceJoint2D distance;
     float chainLength = 2;
     public float maxChainLength = 15f;
 
+    bool init = false;
 
     // Start is called before the first frame update
     void Awake()
     {
+        Init();
+    }
+
+    void Init()
+    {
+        print("init");
         rigid = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
         rocketController = GetComponent<RocketController>();
-        rocketController.OnFire += OnFire;
-        rocketController.OnKeepFiring += OnKeepFiring;
+        GetComponentInParent<PlayerController>().listeners.Add(this);
 
         wayPoints = new List<Vector3>();
         distance = GetComponent<DistanceJoint2D>();
+
+        chainRender = GetComponentInChildren<LineRenderer>();
+        chainRender.positionCount = Mathf.RoundToInt(rocketController.maxFlightTime / jointIntervals);
+        init = true;
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        if(chainRender)
-            chainRender.positionCount = Mathf.RoundToInt(rocketController.maxFlightTime / jointIntervals);
-    }
-
-    private void OnFire()
-    {
-        wayPoints.Clear();
-        ResetChainPosition();
-        chainLength = 2;
-    }
-
-    void ResetChainPosition()
-    {
-        for (int i = 0; i < chainRender.positionCount; i++)
+        if(!init)
         {
-            chainRender.SetPosition(i, transform.position);
+            Init();
         }
     }
 
-    private void OnKeepFiring()
+    public void OnFireInput(bool inputDown)
     {
-
+        if(inputDown)
+        {
+            Debug.Log("OnFireChain true");
+            wayPoints.Clear();
+            ResetChainPosition();
+            chainLength = 2;
+            distance.distance = chainLength;
+        }
         jointDelta += Time.fixedDeltaTime;
         if (chainLength < maxChainLength)
             chainLength += Time.fixedDeltaTime * rigid.velocity.magnitude;
@@ -82,11 +86,40 @@ public class ChainController : MonoBehaviour
         }
     }
 
+    void ResetChainPosition()
+    {
+        Debug.Log("resetchain");
+        for (int i = 0; i < chainRender.positionCount; i++)
+        {
+            chainRender.SetPosition(i, transform.position);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         for (int i = 0; i < wayPoints.Count - 1; i++)
         {
             Gizmos.DrawLine(wayPoints[i], wayPoints[i + 1]);
         }
+    }
+
+    public void OnRetractInput(bool inputDown)
+    {
+        distance.distance -= rocketController.maxVelocity * Time.deltaTime;
+    }
+
+    public void OnMoveInput(Vector2 moveInput)
+    {
+        //Nope
+    }
+
+    public void OnJumpInput()
+    {
+        //Nope
+    }    
+
+    public void OnCursorMove(Vector2 cursorPosition)
+    {
+        //Nope
     }
 }

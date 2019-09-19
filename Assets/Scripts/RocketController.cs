@@ -73,10 +73,6 @@ public class RocketController : MonoBehaviour
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseDirection = worldMousePos - transform.position;
             bool leftMouse = Input.GetMouseButton(0);
-            if(flightTime > 0 && Input.GetMouseButtonDown(1))
-            {
-                Break();
-            }
             if (leftMouse)
             {
                 if(flightTime > 0)

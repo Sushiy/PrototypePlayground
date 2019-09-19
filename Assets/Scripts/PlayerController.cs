@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float playerSpeed = 1;
-    public float jumpForce = 10;
-
     public float rocketFistRecoil = 4;
     Vector2 moveInput = Vector2.zero;
 
@@ -17,36 +14,67 @@ public class PlayerController : MonoBehaviour
 
     public RocketController rocketFist;
 
-    Vector3 velocity;
-    [Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
+    public List<InputListener> listeners;
+
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+        listeners = new List<InputListener>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
         rocketFist.OnBreak += ReactivateAimArm;
         rocketFist.OnGrab += Grab;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-
-        // Move the character by finding the target velocity
-        Vector3 targetVelocity = new Vector2(moveInput.x * 10f, rigid.velocity.y);
-        // And then smoothing it out and applying it to the character
-        rigid.velocity = Vector3.SmoothDamp(rigid.velocity, targetVelocity, ref velocity, movementSmoothing);
-
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        }
-    }
-
     private void Update()
     {
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        for(int i = 0; i < listeners.Count; i++)
+        {
+            listeners[i].OnMoveInput(moveInput);
+        }
+
+        if(Input.GetButtonDown("Jump"))
+        {
+            for (int i = 0; i < listeners.Count; i++)
+            {
+                listeners[i].OnJumpInput();
+            }
+        }
+
+        if(Input.GetButton("Fire1"))
+        {
+            bool inputDown = Input.GetButtonDown("Fire1");
+            if (inputDown)
+            {
+                for (int i = 0; i < listeners.Count; i++)
+                {
+                    listeners[i].OnFireInput(true);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < listeners.Count; i++)
+                {
+                    listeners[i].OnFireInput(inputDown);
+                }
+
+            }
+        }
+
+        if (Input.GetButton("Fire2"))
+        {
+            bool inputDown = Input.GetButtonDown("Fire2");
+            for (int i = 0; i < listeners.Count; i++)
+            {
+                listeners[i].OnRetractInput(inputDown);
+            }
+        }
+
+
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseDirection = worldMousePos - transform.position;
         //Aim at mouse
